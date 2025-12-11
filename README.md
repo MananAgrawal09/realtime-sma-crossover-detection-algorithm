@@ -2,7 +2,7 @@
 I built a real-time stock analysis tool that streams live data, computes SMA indicators, detects bullish/bearish crossovers, and updates a live chart with visual and audio alerts. Features multi-interval analysis, timezone handling, and robust intraday data processing.
 
 
-Features:
+## Features:
 
 1. Live data streaming using Yahoo Finance
 
@@ -29,7 +29,7 @@ Features:
 12. User friendly CLI output
 
 
-How It Works:
+## How It Works:
 
   1. Fetches the latest market data from Yahoo Finance
 
@@ -43,8 +43,15 @@ How It Works:
 
   6. Refreshes the console display with the latest analysis
 
+## USAGE
 
-You will be prompted for:
+1. Create and activate a virtual environment.
+   
+2. Install dependencies: `pip install -r requirements.txt`
+   
+3. Run: `python realtime_sma_analyzer.py`
+
+### You will be prompted for:
 
 1. Stock ticker (e.g., RELIANCE.NS)
 
@@ -55,8 +62,8 @@ You will be prompted for:
 4. Time interval (1m, 5m, 1d, 1mo)
 
 
-🖥️ Example Output
-Console (Real-Time Updates):
+## Example Output
+### Console (Real-Time Updates):
 FOR 5 MIN:
 
 <img width="940" height="465" alt="image" src="https://github.com/user-attachments/assets/6b8d8027-4ed2-457c-8b43-f9f194464bbe" />
@@ -67,7 +74,7 @@ FOR 1 MONTH:
 
 <img width="694" height="240" alt="image" src="https://github.com/user-attachments/assets/5df496a7-ec0f-4359-9d5f-456404ec7ebe" />
 
-Live Chart Example
+### Live Chart Example
 
 Price + 5-DMA + 20-DMA with crossover markers.
 
@@ -87,33 +94,10 @@ FOR 1 MONTH INTERVAL:
 
 <img width="959" height="502" alt="image" src="https://github.com/user-attachments/assets/6a4f9219-9065-450e-90f9-02e42ae6178b" />
 
-ALGORITHM:
+## ALGORITHM:
 
 <img width="361" height="402" alt="image" src="https://github.com/user-attachments/assets/b7ef97a3-01c5-473e-a28b-b5e199f7b24b" />
 
-INSTALLATION:
-
-  pip install -r requirements.txt
-
-  Dependencies include:
-
-    yfinance
-
-    pandas
-
-    matplotlib
-
-    colorama
-
-    pytz
-
-USAGE
-
-  Run the code:
-
-    python realtime-sma-crossover-detection-algorithm.py
-  
-
-LICENSE:
+## LICENSE:
 
   This project is licensed under the MIT License.
