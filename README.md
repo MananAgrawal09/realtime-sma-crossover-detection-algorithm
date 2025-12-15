@@ -61,9 +61,7 @@ I built a real-time stock analysis tool that streams live data, computes SMA ind
 ### Console (Real-Time Updates):
 FOR 5 MIN:
 
-<img width="940" height="465" alt="image" src="https://github.com/user-attachments/assets/6b8d8027-4ed2-457c-8b43-f9f194464bbe" />
-
-<img width="943" height="470" alt="image" src="https://github.com/user-attachments/assets/2c5118af-2778-4cf7-b2c1-b7730eaa1150" />
+<img src="examples/consoledemo.gif" height="350">
 
 FOR 1 MONTH:
 
@@ -75,11 +73,11 @@ Price + 5-DMA + 20-DMA with crossover markers.
 
 FOR 1 MIN INTERVAL:
 
-<img width="959" height="503" alt="image" src="https://github.com/user-attachments/assets/c66acc13-6d58-4045-8c60-3c2b138851da" />
+![Graph Example](examples/demo1.gif)
 
 FOR 5 MIN INTERVAL:
 
-<img width="959" height="502" alt="image" src="https://github.com/user-attachments/assets/d059ee98-9856-4afc-b0aa-c751a1161889" />
+![Graph Example2](examples/demo5.gif)
 
 FOR 1 DAY INTERVAL:
 
@@ -87,7 +85,7 @@ FOR 1 DAY INTERVAL:
 
 FOR 1 MONTH INTERVAL:
 
-<img width="959" height="502" alt="image" src="https://github.com/user-attachments/assets/6a4f9219-9065-450e-90f9-02e42ae6178b" />
+<img width="960" height="460" alt="image" src="https://github.com/user-attachments/assets/30d78efd-e37e-4cf3-ac43-5a144ff06404" />
 
 ## ALGORITHM:
 
