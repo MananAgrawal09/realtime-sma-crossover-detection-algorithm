@@ -53,16 +53,9 @@ I built a real-time stock analysis tool that streams live data, computes SMA ind
    
 3. Run: `python realtime_sma_analyzer.py`
 
-### You will be prompted for:
+### Example Input
 
-1. Stock ticker (e.g., RELIANCE.NS)
-
-2. Lower moving average (e.g., 5)
-
-3. Upper moving average (e.g., 20)
-
-4. Time interval (1m, 5m, 1d, 1mo)
-
+![Example Input](examples/inputexample.gif)
 
 ## Example Output
 ### Console (Real-Time Updates):
