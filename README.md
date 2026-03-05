@@ -8,7 +8,7 @@ I built a real-time stock analysis tool that streams live data, computes SMA ind
 
 1. Live data streaming using Yahoo Finance
 
-2. Multi-timeframe support: 1m, 5m, 1d, 1mo
+2. Multi-timeframe support: 1m, 5m, 15m, 1d, 1mo
 
 3. Dynamic moving averages: user-selectable (e.g., 5-DMA, 20-DMA)
 
@@ -78,6 +78,10 @@ FOR 1 MIN INTERVAL:
 FOR 5 MIN INTERVAL:
 
 ![Graph Example2](examples/demo5.gif)
+
+FOR 15 MIN INTERVAL:
+
+![Graph Example3](examples/demo6.gif)
 
 FOR 1 DAY INTERVAL:
 
