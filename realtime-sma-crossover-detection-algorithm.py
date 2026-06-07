@@ -302,18 +302,6 @@ def check_crossover():
             line.remove()
         level_lines.clear()
 
-        if position_side is not None:
-            if sl_price is not None:
-                sl_color = "red" if sl_breached else "black"
-                level_lines.append(ax.axhline(
-                    sl_price, color=sl_color, linewidth=2, linestyle="-", alpha=0.9, label="Stop Loss"
-                ))
-            if tp_price is not None:
-                tp_color = "green" if tp_hit else "black"
-                level_lines.append(ax.axhline(
-                    tp_price, color=tp_color, linewidth=2, linestyle="-", alpha=0.9, label="Take Profit"
-                ))
-
         dma_diff = data_today["lowerDMA"] - data_today["higherDMA"]
 
         for i in range(1, len(data_today)):
@@ -363,6 +351,34 @@ def check_crossover():
             fig.autofmt_xdate(rotation=30)
         else:
             set_date_formatter()
+
+        if position_side is not None:
+            label_x = (n_bars - 1) if IS_INTRADAY else x_vals[-1]
+            label_style = dict(fontsize=9, fontweight="bold", va="center", ha="left")
+            if sl_price is not None:
+                sl_color = "red" if sl_breached else "black"
+                level_lines.append(ax.axhline(
+                    sl_price, color=sl_color, linewidth=2, linestyle="-", alpha=0.9, label="Stop Loss"
+                ))
+                level_lines.append(ax.text(
+                    label_x, sl_price, f"  Stop Loss ({sl_price:.2f})",
+                    color=sl_color,
+                    bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=sl_color, alpha=0.9),
+                    **label_style,
+                ))
+            if tp_price is not None:
+                tp_color = "green" if tp_hit else "black"
+                level_lines.append(ax.axhline(
+                    tp_price, color=tp_color, linewidth=2, linestyle="-", alpha=0.9, label="Take Profit"
+                ))
+                level_lines.append(ax.text(
+                    label_x, tp_price, f"  Take Profit ({tp_price:.2f})",
+                    color=tp_color,
+                    bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor=tp_color, alpha=0.9),
+                    **label_style,
+                ))
+            ax.legend(loc="upper left")
+
         fig.canvas.draw_idle()
 
 
