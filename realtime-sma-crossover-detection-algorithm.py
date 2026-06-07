@@ -17,14 +17,29 @@ symbol = input("Enter Stock Ticker(eg.RELIANCE.NS): ")
 lower = int(input("Enter lower crossover average(eg.5): "))
 upper = int(input("Enter upper crossover average(eg.20): "))
 interval = input("Enter interval for averages(1m,5m,15m,1d,1mo): ")
+stop_loss_pct = float(input("Enter stop loss % from entry (e.g. 2): "))
+take_profit_pct = float(input("Enter take profit % from entry (e.g. 4): "))
+if stop_loss_pct <= 0 or take_profit_pct <= 0:
+    raise ValueError("Stop loss and take profit must be positive percentages.")
+risk_reward_ratio = take_profit_pct / stop_loss_pct
+print(Fore.CYAN + f"\nRisk-Reward Ratio: 1:{risk_reward_ratio:.2f}\n")
 IS_SLOW_INTERVAL = interval in {"1d", "1mo"}
 IS_INTRADAY = interval in ("1m", "5m", "15m")
+
+position_side = None
+entry_price = None
+sl_price = None
+tp_price = None
+sl_breached = False
+tp_hit = False
+entry_crossover_time = None
 
 fig, ax = plt.subplots(figsize=(10, 5))
 price_line, = ax.plot([], [], label="Price")
 lower_line, = ax.plot([], [], label=f"{lower}-DMA", color="green")
 upper_line, = ax.plot([], [], label=f"{upper}-DMA", color="red")
 signal_bars = []
+level_lines = []
 
 ax.xaxis_date()
 ax.xaxis.set_major_locator(mdates.AutoDateLocator())
@@ -60,7 +75,71 @@ def play_sound():
         os.system("beep -f 1000 -l 500")
 
 
+def open_position(side, price, cross_time=None):
+    global position_side, entry_price, sl_price, tp_price, sl_breached, tp_hit, entry_crossover_time
+    if cross_time is not None and cross_time == entry_crossover_time:
+        return
+    position_side = side
+    entry_price = price
+    entry_crossover_time = cross_time
+    sl_breached = False
+    tp_hit = False
+    if side == "LONG":
+        sl_price = entry_price * (1 - stop_loss_pct / 100)
+        tp_price = entry_price * (1 + take_profit_pct / 100)
+    else:
+        sl_price = entry_price * (1 + stop_loss_pct / 100)
+        tp_price = entry_price * (1 - take_profit_pct / 100)
+
+
+def find_latest_crossover(data):
+    dma_diff = data["lowerDMA"] - data["higherDMA"]
+    for i in range(len(data) - 1, 0, -1):
+        prev_val = dma_diff.iloc[i - 1]
+        curr_val = dma_diff.iloc[i]
+        if pd.isna(prev_val) or pd.isna(curr_val):
+            continue
+        row = data.iloc[i]
+        if prev_val <= 0 and curr_val > 0:
+            return "LONG", row["Close"], data.index[i]
+        if prev_val >= 0 and curr_val < 0:
+            return "SHORT", row["Close"], data.index[i]
+    return None, None, None
+
+
+def sync_position_from_data(data):
+    side, price, cross_time = find_latest_crossover(data)
+    if side is not None:
+        open_position(side, price, cross_time)
+
+
+def check_sl_tp(current_price):
+    global sl_breached, tp_hit
+    if position_side is None or entry_price is None:
+        return
+
+    if position_side == "LONG":
+        if not sl_breached and current_price <= sl_price:
+            sl_breached = True
+            play_sound()
+            print(Fore.RED + f"\n STOP LOSS BREACHED at {round(current_price, 2)} (SL: {round(sl_price, 2)})\n")
+        if not tp_hit and current_price >= tp_price:
+            tp_hit = True
+            play_sound()
+            print(Fore.GREEN + f"\n TAKE PROFIT REACHED at {round(current_price, 2)} (TP: {round(tp_price, 2)})\n")
+    else:
+        if not sl_breached and current_price >= sl_price:
+            sl_breached = True
+            play_sound()
+            print(Fore.RED + f"\n STOP LOSS BREACHED at {round(current_price, 2)} (SL: {round(sl_price, 2)})\n")
+        if not tp_hit and current_price <= tp_price:
+            tp_hit = True
+            play_sound()
+            print(Fore.GREEN + f"\n TAKE PROFIT REACHED at {round(current_price, 2)} (TP: {round(tp_price, 2)})\n")
+
+
 def check_crossover():
+    global position_side, entry_price, sl_price, tp_price, sl_breached, tp_hit
     try:
         ticker = yf.Ticker(symbol)
     except Exception as e:
@@ -151,11 +230,33 @@ def check_crossover():
     if prev["lowerDMA"] < prev["higherDMA"] and last["lowerDMA"] > last["higherDMA"]:
         print(Fore.GREEN + "\n Bullish Crossover → BUY signal\n")
         play_sound()
+        open_position("LONG", last["Close"], last.name)
+        print(Fore.CYAN + f" Entry: {round(entry_price, 2)} | SL: {round(sl_price, 2)} | TP: {round(tp_price, 2)}")
+        print(Fore.CYAN + f" Risk-Reward Ratio: 1:{risk_reward_ratio:.2f}\n")
     elif prev["lowerDMA"] > prev["higherDMA"] and last["lowerDMA"] < last["higherDMA"]:
         print(Fore.RED + "\n Bearish Crossover → SELL signal\n")
         play_sound()
+        open_position("SHORT", last["Close"], last.name)
+        print(Fore.CYAN + f" Entry: {round(entry_price, 2)} | SL: {round(sl_price, 2)} | TP: {round(tp_price, 2)}")
+        print(Fore.CYAN + f" Risk-Reward Ratio: 1:{risk_reward_ratio:.2f}\n")
     else:
-        print(Fore.YELLOW + "\n No crossover yet\n")
+        sync_position_from_data(data)
+        if position_side is not None:
+            print(Fore.YELLOW + f"\n No new crossover — tracking last {position_side} signal from entry {round(entry_price, 2)}\n")
+        else:
+            print(Fore.YELLOW + "\n No crossover yet\n")
+
+    check_sl_tp(last["Close"])
+
+    if position_side is not None:
+        print(Fore.CYAN + f" Active {position_side} | Entry: {round(entry_price, 2)} | SL: {round(sl_price, 2)} | TP: {round(tp_price, 2)}")
+        if sl_breached:
+            print(Fore.RED + " Status: STOP LOSS BREACHED")
+        elif tp_hit:
+            print(Fore.GREEN + " Status: TAKE PROFIT REACHED")
+        else:
+            print(Fore.YELLOW + " Status: Position open — monitoring SL/TP")
+        print(Fore.CYAN + f" Risk-Reward Ratio: 1:{risk_reward_ratio:.2f}")
 
     print("=" * 60 + "\n")
 
@@ -197,6 +298,22 @@ def check_crossover():
             bar.remove()
         signal_bars.clear()
 
+        for line in level_lines:
+            line.remove()
+        level_lines.clear()
+
+        if position_side is not None:
+            if sl_price is not None:
+                sl_color = "red" if sl_breached else "black"
+                level_lines.append(ax.axhline(
+                    sl_price, color=sl_color, linewidth=2, linestyle="-", alpha=0.9, label="Stop Loss"
+                ))
+            if tp_price is not None:
+                tp_color = "green" if tp_hit else "black"
+                level_lines.append(ax.axhline(
+                    tp_price, color=tp_color, linewidth=2, linestyle="-", alpha=0.9, label="Take Profit"
+                ))
+
         dma_diff = data_today["lowerDMA"] - data_today["higherDMA"]
 
         for i in range(1, len(data_today)):
@@ -224,6 +341,15 @@ def check_crossover():
 
         ax.relim()
         ax.autoscale_view()
+
+        if sl_price is not None or tp_price is not None:
+            ymin, ymax = ax.get_ylim()
+            for level in (sl_price, tp_price):
+                if level is not None:
+                    ymin = min(ymin, level)
+                    ymax = max(ymax, level)
+            padding = (ymax - ymin) * 0.03 or 1
+            ax.set_ylim(ymin - padding, ymax + padding)
 
         if IS_INTRADAY:
             ax.set_xlim(-0.5, n_bars - 0.5)
