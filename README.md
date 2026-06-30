@@ -1,34 +1,101 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
-# realtime-sma-crossover-detection-algorithm
-I built a real-time stock analysis tool that streams live data, computes SMA indicators, detects bullish/bearish crossovers, and updates a live chart with visual and audio alerts. Features multi-interval analysis, timezone handling, and robust intraday data processing.
+# Real-Time SMA Crossover Detection & Risk Management Algorithm
+A Python-based real-time stock monitoring system that combines technical analysis, automated trade management, and live visualization. The application continuously streams market data from Yahoo Finance, detects Simple Moving Average (SMA) crossovers, opens simulated positions, calculates configurable Stop Loss and Take Profit levels, and monitors each position in real time until exit conditions are met.
+
+Unlike a traditional SMA crossover detector, this project integrates risk management, state persistence, and live graphical monitoring, making it a more complete trading analysis system.
 
 
 ## Features:
 
-1. Live data streaming using Yahoo Finance
+### Market Data
+1. Live market data using Yahoo Finance
+2. Supports:
+    * 1 Minute
+    * 5 Minute
+    * 15 Minute
+    * Daily
+    * Monthly intervals
+3. Automatic handling of NSE trading hours (09:15–15:30 IST)
+4. Automatic timezone conversion to Asia/Kolkata
+   
+### Technical Analysis
+1. User-defined moving averages (e.g. 5 & 20 DMA)
+2. Continuous SMA calculation
+3. Bullish crossover detection
+4. Bearish crossover detection
+5. Dynamic crossover markers on the live chart
+6. Console notifications with colour-coded output
 
-2. Multi-timeframe support: 1m, 5m, 15m, 1d, 1mo
+### Position & Risk Management 
+After every crossover the algorithm automatically:
+* Opens a LONG or SHORT position
+* Stores the entry price
+* Calculates:
+  * Stop Loss
+  * Take Profit
+  * Risk–Reward Ratio
+* Continues monitoring the position even when no new crossover occurs
+* Tracks the most recent signal until an exit condition is reached
 
-3. Dynamic moving averages: user-selectable (e.g., 5-DMA, 20-DMA)
+The system therefore behaves more like a simplified trading engine rather than only a signal generator.
 
-4. Automatic crossover detection
+### Stop Loss & Take Profit Monitoring 
 
-5. Bullish crossover → Buy signal
+Once a position is active the algorithm continuously monitors:
 
-6. Bearish crossover → Sell signal
+* Stop Loss breach
+* Take Profit hit
 
-7. Audio alerts when a crossover occurs
+When either condition occurs it:
 
-8. Live chart that updates every minute
+* Plays an audio alert
+* Updates console status
+* Highlights the event on the graph
+* Risk–Reward Calculator (New)
 
-9. Vertical markers showing crossover points
+The user specifies:
 
-10. Timezone handling (Asia/Kolkata)
+* Stop Loss %
+* Take Profit %
 
-11. Intraday filtering for accurate 9:15–15:30 market hours
+The program automatically computes
 
-12. User friendly CLI output
+Risk : Reward = Take Profit % / Stop Loss %
+
+Example
+
+`Stop Loss = 2%`
+
+`Take Profit = 3%`
+
+`Risk : Reward = 1 : 1.50`
+
+The ratio is displayed whenever a new trade is opened and during live monitoring.
+
+### Live Visualization
+
+The live Matplotlib interface displays
+
+* Price
+* Lower SMA
+* Higher SMA
+* Bullish crossover markers
+* Bearish crossover markers
+* Current Stop Loss
+* Current Take Profit
+
+The graph refreshes every 60 seconds without restarting the program.
+
+### Engineering Features
+Stateful position tracking
+Modular functions
+Dynamic graph updates using FuncAnimation
+Cross-platform audio alerts
+Robust exception handling
+Automatic recovery from API failures
+Adaptive plotting for intraday and long-term intervals
+Efficient rolling moving-average computation using pandas
 
 
 ## How It Works:
