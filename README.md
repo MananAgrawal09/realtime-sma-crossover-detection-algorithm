@@ -88,29 +88,19 @@ The live Matplotlib interface displays
 The graph refreshes every 60 seconds without restarting the program.
 
 ### Engineering Features
-Stateful position tracking
-Modular functions
-Dynamic graph updates using FuncAnimation
-Cross-platform audio alerts
-Robust exception handling
-Automatic recovery from API failures
-Adaptive plotting for intraday and long-term intervals
-Efficient rolling moving-average computation using pandas
+* Stateful position tracking
+* Modular functions
+* Dynamic graph updates using FuncAnimation
+* Cross-platform audio alerts
+* Robust exception handling
+* Automatic recovery from API failures
+* Adaptive plotting for intraday and long-term intervals
+* Efficient rolling moving-average computation using pandas
 
 
 ## How It Works:
 
-  1. Fetches the latest market data from Yahoo Finance
-
-  2. Computes rolling moving averages in real time
-
-  3. Compares previous vs. current SMA values to detect crossings
-
-  4. Updates a live Matplotlib chart every 60 seconds
-
-  5. Audio and Visual alert when a crossover occurs
-
-  6. Refreshes the console display with the latest analysis
+<img src="examples/algorithmhowitworks.png" height="650">
 
 ## USAGE
 
@@ -118,7 +108,7 @@ Efficient rolling moving-average computation using pandas
    
 2. Install dependencies: `pip install -r requirements.txt`
    
-3. Run: `python realtime_sma_analyzer.py`
+3. Run: `python realtime-sma-crossover-detection-algorithm.py`
 
 ### Example Input
 
@@ -158,9 +148,41 @@ FOR 1 MONTH INTERVAL:
 
 <img width="960" height="460" alt="image" src="https://github.com/user-attachments/assets/30d78efd-e37e-4cf3-ac43-5a144ff06404" />
 
-## ALGORITHM:
+## Technologies Used
+Python
 
-<img width="361" height="402" alt="image" src="https://github.com/user-attachments/assets/b7ef97a3-01c5-473e-a28b-b5e199f7b24b" />
+pandas
+
+NumPy
+
+yfinance
+
+matplotlib
+
+colorama
+
+pytz
+
+## Skills Demonstrated
+Algorithm Design
+
+Data Structures
+
+State Management
+
+Time-Series Analysis
+
+Financial Data Processing
+
+Data Visualization
+
+Event-Driven Programming
+
+Error Handling
+
+Object-Oriented Design Principles
+
+Software Engineering
 
 ## LICENSE:
 
