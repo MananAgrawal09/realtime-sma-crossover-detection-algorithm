@@ -1,7 +1,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 # Real-Time SMA Crossover Detection & Risk Management Algorithm
-A Python-based real-time stock monitoring system that combines technical analysis, automated trade management, and live visualization. The application continuously streams market data from Yahoo Finance, detects Simple Moving Average (SMA) crossovers, opens simulated positions, calculates configurable Stop Loss and Take Profit levels, and monitors each position in real time until exit conditions are met.
+A Python-based real-time stock monitoring system that combines technical analysis, automated trade management, and live visualization. The application continuously streams market data from Yahoo Finance, detects Simple Moving Average (SMA) crossovers, opens simulated positions, calculates configurable Stop Loss and Take Profit levels, and monitors each position in real-time until exit conditions are met.
 
 Unlike a traditional SMA crossover detector, this project integrates risk management, state persistence, and live graphical monitoring, making it a more complete trading analysis system.
 
